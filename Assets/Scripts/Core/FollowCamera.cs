@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace RPG.Core {
 public class FollowCamera : MonoBehaviour {
     // Start is called before the first frame update
     [SerializeField] Transform target;
@@ -11,3 +12,4 @@ public class FollowCamera : MonoBehaviour {
 
     }
 }
+} //namespace RPG.Core
