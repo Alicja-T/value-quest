@@ -7,6 +7,7 @@ public class Fighter : MonoBehaviour, IAction {
 
 [SerializeField] float weaponRange = 2f;
 [SerializeField] float timeBetweenAttacks = 1f;
+[SerializeField] float weaponDamage = 10f;
 Transform target;
 float timeSinceLastAttack = 0;
 private void Update() {
@@ -26,7 +27,11 @@ private void Update() {
 public void Cancel() {
     target = null;
 }
-
+//animation event
+void Hit() {
+    Health health = target.GetComponent<Health>();
+    health.TakeDamage(weaponDamage);
+}
 
 public void Attack(CombatTarget combatTarget){
     GetComponent<ActionScheduler>().StartAction(this);
@@ -36,12 +41,14 @@ public void Attack(CombatTarget combatTarget){
 
 void AttackBehaviour() {
     if (timeSinceLastAttack >= timeBetweenAttacks) {
+        // triggers Hit() event
         GetComponent<Animator>().SetTrigger("Attack");
         timeSinceLastAttack = 0;
+       
     }
 }
 
-void Hit() {}
+
 
 }//class Fighter
 }//namespace RPG.Combat
