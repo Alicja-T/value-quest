@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace RPG.Combat {
+namespace RPG.Core {
 public class Health : MonoBehaviour {
    
     [SerializeField] float health = 100f;
@@ -22,11 +22,12 @@ public class Health : MonoBehaviour {
 
     void DeathSequence() {
       if (!isDead) {
-          GetComponent<Animator>().SetTrigger(CombatConstants.DEATH_TRIGGER);
+          GetComponent<Animator>().SetTrigger(CoreConstants.DEATH_TRIGGER);
+          GetComponent<ActionScheduler>().CancelCurrentAction();
           isDead = true;
       }
     }
 
  
 }//class
-}//namespace RPG.Combat
+}//namespace RPG.Core

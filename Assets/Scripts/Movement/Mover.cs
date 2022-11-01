@@ -8,13 +8,15 @@ namespace RPG.Movement {
   public class Mover : MonoBehaviour, IAction {
 
     [SerializeField] Transform target;
-
+    Health health;
     NavMeshAgent navMeshAgent;
     void Start() {
       navMeshAgent = GetComponent<NavMeshAgent>();
+      health = GetComponent<Health>();
     }
 
     void Update() {
+      navMeshAgent.enabled = !health.IsDead();
       UpdateAnimator();
     }
 
