@@ -34,6 +34,12 @@ namespace RPG.Control {
         return distance < chaseDistance;
     }
 
+    /// Callback to draw gizmos only if the object is selected.
+    /// </summary>
+    private void OnDrawGizmosSelected() {
+      Gizmos.color = Color.blue;
+      Gizmos.DrawWireSphere(transform.position, chaseDistance);
+    }
 
 }
 }//namespace RPG.Control
