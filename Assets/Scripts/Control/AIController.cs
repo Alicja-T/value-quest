@@ -10,6 +10,7 @@ namespace RPG.Control {
     [SerializeField] float suspicionTime = 5f;
     [SerializeField] PatrolPath patrolPath;
     [SerializeField] float waypointEpsilon = 2.3f;
+    [SerializeField] float dwellingTime = 2f;
 
     Fighter fighter;
     GameObject player;
@@ -18,6 +19,7 @@ namespace RPG.Control {
     Vector3 guardLocation;
     int currentPathInd = 0;
     float timeSinceLastSawPlayer = Mathf.Infinity;
+    float timeAtWaypoint = Mathf.Infinity;
     private void Start() {
         fighter = GetComponent<Fighter>();
         player = GameObject.FindGameObjectWithTag(CoreConstants.PLAYER_TAG);
@@ -27,20 +29,27 @@ namespace RPG.Control {
     }
 
     private void Update() {
-        if (health.IsDead()) {
-            return;
-        }
-        if (InAttackRange() && fighter.CanAttack(player)) {
-            timeSinceLastSawPlayer = 0;
-            fighter.Attack(player.gameObject);
-        }
-        else if (timeSinceLastSawPlayer < suspicionTime) {
-            GetComponent<ActionScheduler>().CancelCurrentAction();
-        }
-        else {
-            PatrolBehavior();
-        }
+      if (health.IsDead()) {
+        return;
+      }
+      if (InAttackRange() && fighter.CanAttack(player)) {
+        AttackBehavior();
+      } else if (timeSinceLastSawPlayer < suspicionTime) {
+        GetComponent<ActionScheduler>().CancelCurrentAction();
+      } else {
+        PatrolBehavior();
+      }
+      UpdateTimers();
+    }
+
+    private void AttackBehavior() {
+      timeSinceLastSawPlayer = 0;
+      fighter.Attack(player.gameObject);
+    }
+
+    private void UpdateTimers() {
       timeSinceLastSawPlayer += Time.deltaTime;
+      timeAtWaypoint += Time.deltaTime;
     }
 
     private void PatrolBehavior() {
@@ -48,10 +57,13 @@ namespace RPG.Control {
       if (patrolPath != null) {
         if (IsAtWaypoint()) {
             CycleWaypoint();
+            timeAtWaypoint = 0;
         }
         nextPosition = GetWaypoint();
       }
-      mover.StartMoveAction(nextPosition);
+      if (timeAtWaypoint > dwellingTime) {
+        mover.StartMoveAction(nextPosition);
+      }
     }
 
     private bool InAttackRange() {

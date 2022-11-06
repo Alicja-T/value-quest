@@ -63,3 +63,13 @@ sysinfo.txt
 crashlytics-build.properties
 
 crashlytics-build.properties
+Assets/_TerrainAutoUpgrade/*
+Assets/ColorSkies/*
+Assets/Cartoon Heroes/*
+Assets/QS/*
+Assets/Standard Assets/*
+Assets/VillagePack/*
+Assets/Scenes/Sandbox/*
+
+
+ProjectSettings/NavMeshAreas.asset
