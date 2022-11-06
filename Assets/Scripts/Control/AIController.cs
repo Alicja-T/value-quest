@@ -8,11 +8,15 @@ namespace RPG.Control {
 
     [SerializeField] float chaseDistance = 5f;
     [SerializeField] float suspicionTime = 5f;
+    [SerializeField] PatrolPath patrolPath;
+    [SerializeField] float waypointEpsilon = 2.3f;
+
     Fighter fighter;
     GameObject player;
     Health health;
     Mover mover;
     Vector3 guardLocation;
+    int currentPathInd = 0;
     float timeSinceLastSawPlayer = Mathf.Infinity;
     private void Start() {
         fighter = GetComponent<Fighter>();
@@ -31,18 +35,42 @@ namespace RPG.Control {
             fighter.Attack(player.gameObject);
         }
         else if (timeSinceLastSawPlayer < suspicionTime) {
-            print("I suspect you!");
             GetComponent<ActionScheduler>().CancelCurrentAction();
         }
         else {
-            mover.StartMoveAction(guardLocation);
+            PatrolBehavior();
         }
-        timeSinceLastSawPlayer += Time.deltaTime;
+      timeSinceLastSawPlayer += Time.deltaTime;
+    }
+
+    private void PatrolBehavior() {
+      Vector3 nextPosition = guardLocation;
+      if (patrolPath != null) {
+        if (IsAtWaypoint()) {
+            CycleWaypoint();
+        }
+        nextPosition = GetWaypoint();
+      }
+      mover.StartMoveAction(nextPosition);
     }
 
     private bool InAttackRange() {
         float distance = Vector3.Distance(player.transform.position, transform.position);
         return distance < chaseDistance;
+    }
+
+
+    private bool IsAtWaypoint() {
+        float distance = Vector3.Distance(transform.position, GetWaypoint());
+        return distance < waypointEpsilon;
+    }
+
+    private Vector3 GetWaypoint() {
+        return patrolPath.GetWaypoint(currentPathInd);
+    }
+
+    private void CycleWaypoint() {
+        currentPathInd = patrolPath.GetNextWaypoint(currentPathInd);
     }
 
     /// Callback to draw gizmos only if the object is selected.
