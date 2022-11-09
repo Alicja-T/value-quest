@@ -73,3 +73,7 @@ Assets/Scenes/Sandbox/*
 ProjectSettings/NavMeshAreas.asset
 Assets/Scenes/*
 
+Assets/AllSkyFree/*
+Assets/Conifers*/*
+Assets/Rocks*/*
+Assets/Sun.mat
