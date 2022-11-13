@@ -74,6 +74,7 @@ public void Attack(GameObject combatTarget){
 public void Cancel() {
     StopAttack();
     target = null;
+    GetComponent<Mover>().Cancel();
 }
 
 
