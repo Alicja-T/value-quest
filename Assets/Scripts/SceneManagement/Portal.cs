@@ -14,6 +14,9 @@ public class Portal : MonoBehaviour {
     [SerializeField] int sceneIndex = -1;
     [SerializeField] Transform spawnPoint;
     [SerializeField] DestinationIdentifier destination;
+    [SerializeField] float fadeOutTime = 0.5f;
+    [SerializeField] float fadeInTime = 1f;
+    [SerializeField] float waitTime = 0.5f;
     void OnTriggerEnter(Collider other) {
         if (other.gameObject.tag == CoreConstants.PLAYER_TAG) {
             StartCoroutine(Transition());
@@ -21,11 +24,18 @@ public class Portal : MonoBehaviour {
     }
 
     private IEnumerator Transition() {
-        DontDestroyOnLoad(gameObject);
+         DontDestroyOnLoad(gameObject);
+
+        Fader fader = FindObjectOfType<Fader>();
+        yield return fader.FadeOut(fadeOutTime);
         yield return SceneManager.LoadSceneAsync(sceneIndex);
+        
         print("Scene loaded");
         Portal otherPortal = GetOtherPortal();
         UpdatePlayer(otherPortal);
+        
+        yield return new WaitForSeconds(waitTime);
+        yield return fader.FadeIn(fadeInTime);
         Destroy(gameObject);
     }
     private void UpdatePlayer(Portal otherPortal) {
