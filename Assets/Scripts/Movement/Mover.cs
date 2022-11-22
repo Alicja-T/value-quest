@@ -50,6 +50,7 @@ namespace RPG.Movement {
 
     public void RestoreState(object state) {
       SerializableVector3 position = (SerializableVector3)state;
+      //TO_DO check if position is from the same scene to get rid of warning
       GetComponent<NavMeshAgent>().enabled = false;
       transform.position = position.ToVector();
       GetComponent<NavMeshAgent>().enabled = true;
