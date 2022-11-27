@@ -8,12 +8,16 @@ public class Fighter : MonoBehaviour, IAction {
 [SerializeField] float weaponRange = 2f;
 [SerializeField] float timeBetweenAttacks = 1f;
 [SerializeField] float weaponDamage = 10f;
+[SerializeField] GameObject weaponPrefab = null;
+[SerializeField] Transform rightHandTransform;
 Health target;
-float timeSinceLastAttack = 0;
+float timeSinceLastAttack = Mathf.Infinity;
 
 private void Start() {
-    timeSinceLastAttack = timeBetweenAttacks;
+      SpawnWeapon();
 }
+
+
 
 private void Update() {
     timeSinceLastAttack += Time.deltaTime;
@@ -27,6 +31,10 @@ private void Update() {
         GetComponent<Mover>().Cancel();
         AttackBehaviour();
     }
+}
+
+private void SpawnWeapon() {
+    Instantiate(weaponPrefab, rightHandTransform);
 }
 
 //animation event
