@@ -8,15 +8,17 @@ public class Fighter : MonoBehaviour, IAction {
 [SerializeField] float weaponRange = 2f;
 [SerializeField] float timeBetweenAttacks = 1f;
 [SerializeField] float weaponDamage = 10f;
-[SerializeField] GameObject weaponPrefab = null;
+
 [SerializeField] Transform rightHandTransform;
+
+[SerializeField] Weapon weapon;
+
 Health target;
 float timeSinceLastAttack = Mathf.Infinity;
 
 private void Start() {
-      SpawnWeapon();
-}
-
+    SpawnWeapon();
+} 
 
 
 private void Update() {
@@ -34,7 +36,13 @@ private void Update() {
 }
 
 private void SpawnWeapon() {
-    Instantiate(weaponPrefab, rightHandTransform);
+    if (weapon == null) return;
+    Animator animator = GetComponent<Animator>();
+    if (animator != null) {
+        AnimatorOverrideController animatorOverrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
+        animator.runtimeAnimatorController = animatorOverrideController;
+        weapon.Spawn(rightHandTransform, animator);
+    }
 }
 
 //animation event
