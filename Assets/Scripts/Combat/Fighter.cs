@@ -8,6 +8,7 @@ public class Fighter : MonoBehaviour, IAction {
 
 [SerializeField] float timeBetweenAttacks = 1f;
 [SerializeField] Transform rightHandTransform;
+[SerializeField] Transform leftHandTransform;
 [SerializeField] Weapon defaultWeapon = null;
 
 Health target;
@@ -40,7 +41,7 @@ public void EquipWeapon(Weapon weapon) {
     if (animator != null) {
         //AnimatorOverrideController animatorOverrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
         //animator.runtimeAnimatorController = animatorOverrideController;
-        currentWeapon.Spawn(rightHandTransform, animator);
+        currentWeapon.Spawn(rightHandTransform, leftHandTransform, animator);
     }
 }
 

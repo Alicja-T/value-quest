@@ -9,9 +9,11 @@ public class Weapon : ScriptableObject
     [SerializeField] GameObject equippedPrefab = null;
     [SerializeField] float weaponRange = 2f;
     [SerializeField] float weaponDamage = 10f;
+    [SerializeField] bool isRightHand = true;
 
-    public void Spawn(Transform handTransform, Animator animator){
+    public void Spawn(Transform rightHand, Transform leftHand, Animator animator){
         if (equippedPrefab != null) {
+            Transform handTransform = isRightHand ? rightHand : leftHand;
             Instantiate(equippedPrefab, handTransform);
         }
         //this is just to avoid error, but there must be another way...
