@@ -51,7 +51,9 @@ void Hit() {
     if (currentWeapon.HasProjectile()) {
         currentWeapon.LaunchProjectile(leftHandTransform, rightHandTransform, target);
     }
-    target.TakeDamage(currentWeapon.GetDamage());
+    else {
+        target.TakeDamage(currentWeapon.GetDamage());
+    }
 }
 
 void Shoot() {

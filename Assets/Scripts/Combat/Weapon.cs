@@ -38,7 +38,7 @@ public class Weapon : ScriptableObject
         Projectile projectileInstance = Instantiate(
             projectile, 
             GetHandTransform(leftHand, rightHand).position, Quaternion.identity);
-        projectileInstance.SetTarget(target);
+        projectileInstance.SetTarget(target, weaponDamage);
     }
 
     public float GetRange() {

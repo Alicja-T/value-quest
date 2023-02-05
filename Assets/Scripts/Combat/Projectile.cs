@@ -8,6 +8,7 @@ public class Projectile : MonoBehaviour
     
     [SerializeField] float speed = 1f;
     Health target = null;
+    float damage = 0f;
     void Update()
     {   
         if (target == null) return;
@@ -16,13 +17,22 @@ public class Projectile : MonoBehaviour
         
     }
 
-    public void SetTarget(Health newTarget) {
+    public void SetTarget(Health newTarget, float damage) {
         this.target = newTarget;
+        this.damage = damage;
     }
 
     private Vector3 GetAimLocation(){
         CapsuleCollider collider = target.GetComponent<CapsuleCollider>();
         if (collider == null) return target.transform.position;
         return target.transform.position + Vector3.up * collider.height/2f;
+    }
+
+    private void OnTriggerEnter(Collider other){
+        if (other.GetComponent<Health>() != target) {
+            return;
+        }
+        target.TakeDamage(damage);
+        Destroy(gameObject);
     }
 }
