@@ -48,7 +48,14 @@ public void EquipWeapon(Weapon weapon) {
 //animation event
 void Hit() {
     if (target == null) {return;}
+    if (currentWeapon.HasProjectile()) {
+        currentWeapon.LaunchProjectile(leftHandTransform, rightHandTransform, target);
+    }
     target.TakeDamage(currentWeapon.GetDamage());
+}
+
+void Shoot() {
+    Hit();
 }
 
 void AttackBehaviour() {
