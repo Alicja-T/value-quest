@@ -14,15 +14,27 @@ public class Weapon : ScriptableObject
     [SerializeField] Projectile projectile = null;
 
     public void Spawn(Transform rightHand, Transform leftHand, Animator animator){
-        if (equippedPrefab != null)
-      {
-        Transform handTransform = GetHandTransform(rightHand, leftHand);
-        Instantiate(equippedPrefab, handTransform);
-      }
-      //this is just to avoid error, but there must be another way...
-      if (weaponOverride != null){ 
+        DestroyOldWeapon(rightHand, leftHand);
+        if (equippedPrefab != null){
+            Transform handTransform = GetHandTransform(rightHand, leftHand);
+            GameObject weapon = Instantiate(equippedPrefab, handTransform);
+            weapon.name = CoreConstants.WEAPON;
+        }
+        //this is just to avoid error, but there must be another way...
+        if (weaponOverride != null){ 
             animator.runtimeAnimatorController = weaponOverride;
         }
+    }
+
+
+    private void DestroyOldWeapon(Transform rightHand, Transform leftHand) {
+        Transform oldWeapon = rightHand.Find(CoreConstants.WEAPON);
+        if (oldWeapon == null) {
+            oldWeapon = leftHand.Find(CoreConstants.WEAPON);
+        }
+        if (oldWeapon == null) { return;}
+        oldWeapon.name = CoreConstants.DESTROYING_STATE;
+        Destroy(oldWeapon.gameObject);
     }
 
     private Transform GetHandTransform(Transform rightHand, Transform leftHand)
