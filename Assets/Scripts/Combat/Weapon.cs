@@ -5,8 +5,7 @@ using RPG.Core;
 namespace RPG.Combat {
 [CreateAssetMenu(fileName = "Weapon", menuName = "Weapons/Make New Weapon", order = 0)]
 public class Weapon : ScriptableObject
-{
-    [SerializeField] AnimatorOverrideController weaponOverride = null;
+{  [SerializeField] AnimatorOverrideController weaponOverride = null;
     [SerializeField] GameObject equippedPrefab = null;
     [SerializeField] float weaponRange = 2f;
     [SerializeField] float weaponDamage = 10f;
