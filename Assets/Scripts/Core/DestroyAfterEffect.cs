@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+namespace RPG.Core {
 public class DestroyAfterEffect : MonoBehaviour {
     
     void Update() {
@@ -10,3 +10,4 @@ public class DestroyAfterEffect : MonoBehaviour {
         }
     }
 }
+}//namespace
