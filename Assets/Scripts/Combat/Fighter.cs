@@ -10,13 +10,14 @@ public class Fighter : MonoBehaviour, IAction {
 [SerializeField] Transform rightHandTransform;
 [SerializeField] Transform leftHandTransform;
 [SerializeField] Weapon defaultWeapon = null;
-
+[SerializeField] string defaultWeaponName = CoreConstants.DEFAULT_WEAPON_NAME;
 Health target;
 float timeSinceLastAttack = Mathf.Infinity;
 Weapon currentWeapon = null;
 
 private void Start() {
-    EquipWeapon(defaultWeapon);
+    Weapon weapon = Resources.Load<Weapon>(defaultWeaponName);
+    EquipWeapon(weapon);
 } 
 
 

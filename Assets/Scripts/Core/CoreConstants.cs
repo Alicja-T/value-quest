@@ -10,6 +10,8 @@ static class CoreConstants {
 
     public const string WEAPON = "Weapon";
     public const string DESTROYING_STATE = "Destroying_state";
+
+    public const string DEFAULT_WEAPON_NAME = "Unarmed";
 }
 
 
