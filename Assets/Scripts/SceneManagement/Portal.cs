@@ -29,13 +29,17 @@ public class Portal : MonoBehaviour {
         Fader fader = FindObjectOfType<Fader>();
         yield return fader.FadeOut(fadeOutTime);
         SavingWrapper savingWrapper = FindObjectOfType<SavingWrapper>();
+        print("started saving first scene");
         savingWrapper.Save();
         yield return SceneManager.LoadSceneAsync(sceneIndex);
+        print("loading new scene");
         savingWrapper.Load();
+        yield return new WaitForEndOfFrame();
         print("Scene loaded");
         Portal otherPortal = GetOtherPortal();
         UpdatePlayer(otherPortal);
         savingWrapper.Save();
+        print("saving new location");
         yield return new WaitForSeconds(waitTime);
         yield return fader.FadeIn(fadeInTime);
         Destroy(gameObject);
