@@ -1,19 +1,24 @@
 ﻿using UnityEngine;
 using RPG.Saving;
+using RPG.Core;
+using RPG.Stats;
 
-namespace RPG.Core {
+namespace RPG.Attributes {
 public class Health : MonoBehaviour, ISaveable{
    
     [SerializeField] float health = 100f;
     bool isDead = false;
 
    
+
+    void Start() {
+      health = GetComponent<BaseStats>().GetHealth();
+    }
+
     // Update is called once per frame
     public bool IsDead() {
       return isDead;
    }
-
-    
 
     public void TakeDamage(float damage) {
        health = Mathf.Max(health-damage,0);
@@ -23,6 +28,9 @@ public class Health : MonoBehaviour, ISaveable{
        }
     }
 
+    public float GetPercentage() {
+      return 100f * (health / GetComponent<BaseStats>().GetHealth());
+    }
 
     void DeathSequence() {
       if (!isDead) {
