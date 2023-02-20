@@ -2,6 +2,7 @@ using UnityEngine;
 using RPG.Core;
 using RPG.Movement;
 using RPG.Saving;
+using RPG.Attributes;
 
 namespace RPG.Combat{
 public class Fighter : MonoBehaviour, IAction, ISaveable {
