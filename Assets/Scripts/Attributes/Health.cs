@@ -3,6 +3,7 @@ using RPG.Saving;
 using RPG.Core;
 using RPG.Stats;
 
+
 namespace RPG.Attributes {
 public class Health : MonoBehaviour, ISaveable{
    
@@ -20,10 +21,11 @@ public class Health : MonoBehaviour, ISaveable{
       return isDead;
    }
 
-    public void TakeDamage(float damage) {
+    public void TakeDamage(GameObject instigator, float damage) {
        health = Mathf.Max(health-damage,0);
        print("my health is " + health);
        if (health == 0) {
+         AwardExperience(instigator);
          DeathSequence();
        }
     }
@@ -38,6 +40,12 @@ public class Health : MonoBehaviour, ISaveable{
           GetComponent<ActionScheduler>().CancelCurrentAction();
           isDead = true;
       }
+    }
+
+    private void AwardExperience(GameObject instigator){
+      Experience experience = instigator.GetComponent<Experience>();
+      if (experience == null) return;
+      experience.GainExperience(GetComponent<BaseStats>().GetHealth());
     }
 
     public object CaptureState() {

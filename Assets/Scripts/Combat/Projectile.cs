@@ -14,6 +14,7 @@ public class Projectile : MonoBehaviour
     [SerializeField] float lifeAfterImpact = 2f;
     Health target = null;
     float damage = 0f;
+    GameObject instigator = null;
     
     Vector3 shootingDirection; 
 
@@ -32,9 +33,10 @@ public class Projectile : MonoBehaviour
         
     }
 
-    public void SetTarget(Health newTarget, float damage) {
+    public void SetTarget(GameObject instigator, Health newTarget, float damage) {
         this.target = newTarget;
         this.damage = damage;
+        this.instigator = instigator;
         Destroy(gameObject, maxLifeTime);
     }
 
@@ -50,7 +52,7 @@ public class Projectile : MonoBehaviour
             return;
         }
         if (target.IsDead()) return;
-        target.TakeDamage(damage);
+        target.TakeDamage(instigator, damage);
         speed = 0;
         if (hitEffect != null) {
             Instantiate(hitEffect, GetAimLocation(), transform.rotation);

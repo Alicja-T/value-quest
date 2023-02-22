@@ -56,10 +56,10 @@ public Health GetTarget() {
 void Hit() {
     if (target == null) {return;}
     if (currentWeapon.HasProjectile()) {
-        currentWeapon.LaunchProjectile(leftHandTransform, rightHandTransform, target);
+        currentWeapon.LaunchProjectile(leftHandTransform, rightHandTransform, target, gameObject);
     }
     else {
-        target.TakeDamage(currentWeapon.GetDamage());
+        target.TakeDamage(gameObject, currentWeapon.GetDamage());
     }
 }
 
