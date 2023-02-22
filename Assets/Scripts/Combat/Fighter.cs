@@ -48,6 +48,10 @@ public void EquipWeapon(Weapon weapon) {
     }
 }
 
+public Health GetTarget() {
+    return target;
+}
+
 //animation event
 void Hit() {
     if (target == null) {return;}
