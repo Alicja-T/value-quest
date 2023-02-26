@@ -13,7 +13,7 @@ public class Health : MonoBehaviour, ISaveable{
    
 
     void Start() {
-      health = GetComponent<BaseStats>().GetHealth();
+      health = GetComponent<BaseStats>().GetStat(Stat.Health);
     }
 
     // Update is called once per frame
@@ -31,7 +31,7 @@ public class Health : MonoBehaviour, ISaveable{
     }
 
     public float GetPercentage() {
-      return 100f * (health / GetComponent<BaseStats>().GetHealth());
+      return 100f * (health / GetComponent<BaseStats>().GetStat(Stat.Health));
     }
 
     void DeathSequence() {
@@ -45,7 +45,7 @@ public class Health : MonoBehaviour, ISaveable{
     private void AwardExperience(GameObject instigator){
       Experience experience = instigator.GetComponent<Experience>();
       if (experience == null) return;
-      experience.GainExperience(GetComponent<BaseStats>().GetHealth());
+      experience.GainExperience(GetComponent<BaseStats>().GetStat(Stat.ExperienceReward));
     }
 
     public object CaptureState() {
