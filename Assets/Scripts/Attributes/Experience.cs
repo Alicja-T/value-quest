@@ -19,5 +19,9 @@ public class Experience : MonoBehaviour, ISaveable {
     {
       experiencePoints = (float) state;
     }
+
+    public float GetExperience(){
+        return experiencePoints;
+    }
   }
 }
