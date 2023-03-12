@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using RPG.Core;
-namespace RPG.Attributes {
+namespace RPG.Stats {
 public class ExperienceDisplay : MonoBehaviour {
   Experience experience;
 

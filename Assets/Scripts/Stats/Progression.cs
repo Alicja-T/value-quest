@@ -18,6 +18,11 @@ public class Progression : ScriptableObject
       
     }
 
+    public float[] GetLevels(Stat stat, CharacterClass checkedClass){
+      BuildLookUp();
+      return lookupTable[checkedClass][stat];
+    }
+
     private void BuildLookUp()
     {
      if (lookupTable != null) return;
