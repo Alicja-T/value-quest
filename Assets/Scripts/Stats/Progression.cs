@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 namespace RPG.Stats {
 [CreateAssetMenu(fileName = "Progression", menuName = "Stats/New Progression", order = 0)]
@@ -6,17 +7,28 @@ public class Progression : ScriptableObject
 {
     [SerializeField]
     ProgressionCharacterClass[] characterClasses = null;
-
+    Dictionary<CharacterClass, Dictionary<Stat, float[]>> lookupTable = null;
     public float GetStat(Stat stat, CharacterClass checkedClass, int level) {
-      foreach (ProgressionCharacterClass charClass in characterClasses){
-        if(charClass.characterClass != checkedClass) continue;
-        foreach (ProgressionStat progressStat in charClass.stats) {
-          if (progressStat.stat == stat) {
-            return progressStat.levels[level-1];
-          }
-        }
+      BuildLookUp();
+      float[] levels = lookupTable[checkedClass][stat];
+      if (levels.Length < level) {
+        return 0;
       }
-      return 0;
+      return levels[level - 1];
+      
+    }
+
+    private void BuildLookUp()
+    {
+     if (lookupTable != null) return;
+     lookupTable = new Dictionary<CharacterClass, Dictionary<Stat, float[]>>();
+     foreach (ProgressionCharacterClass charClass in characterClasses){
+      Dictionary<Stat, float[]> statsDictionary = new Dictionary<Stat, float[]>();
+      foreach (ProgressionStat progressStat in charClass.stats){
+        statsDictionary[progressStat.stat] = progressStat.levels;
+      }
+      lookupTable[charClass.characterClass] = statsDictionary;
+     }
     }
 
     [System.Serializable]
