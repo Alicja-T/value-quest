@@ -23,7 +23,9 @@ public class BaseStats : MonoBehaviour
     }
     
     public int GetLevel(){
-        float currentExperience = GetComponent<Experience>().GetExperience();
+        Experience xp = GetComponent<Experience>();
+        if (xp == null) return 1;
+        float currentExperience = xp.GetExperience();
         float[] levels = progression.GetLevels(Stat.ExperienceToLevel, characterClass);
         for (int index = currentLevel - 1; index < levels.Length; index++){
             if (currentExperience <= levels[index]) {
