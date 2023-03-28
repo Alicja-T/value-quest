@@ -10,7 +10,16 @@ public class BaseStats : MonoBehaviour
     [SerializeField] int currentLevel = 1;
     [SerializeField] CharacterClass characterClass;
     [SerializeField] Progression progression = null;
-        
+    
+private void Start() {
+    currentLevel = CalculateLevel();
+    Experience xp = GetComponent<Experience>();
+    if (xp != null){
+          xp.OnExperienceGained += UpdateLevel;
+    }
+}
+
+
     private void Update(){
         if (gameObject.tag == CoreConstants.PLAYER_TAG){
             print("My level: " + GetLevel());
@@ -21,8 +30,23 @@ public class BaseStats : MonoBehaviour
 
         return progression.GetStat(stat, characterClass, currentLevel);
     }
-    
-    public int GetLevel(){
+
+    public int GetLevel (){
+        if (currentLevel < 1) {
+            currentLevel = CalculateLevel();
+        }
+        return currentLevel;
+    }
+
+    public void UpdateLevel(){
+      int newLevel = CalculateLevel();
+      if (newLevel > currentLevel){
+        currentLevel = newLevel;
+        print("Levelled Up!");
+      }
+    }
+
+    public int CalculateLevel(){
         Experience xp = GetComponent<Experience>();
         if (xp == null) return 1;
         float currentExperience = xp.GetExperience();
