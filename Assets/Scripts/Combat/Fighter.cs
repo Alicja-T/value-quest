@@ -39,7 +39,6 @@ private void Update() {
 public void EquipWeapon(Weapon weapon) {
     if (weapon == null) return;
     currentWeapon = weapon;
-    print("equipped weapon: " + currentWeapon.name);
     Animator animator = GetComponent<Animator>();
     if (animator != null) {
         //AnimatorOverrideController animatorOverrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);

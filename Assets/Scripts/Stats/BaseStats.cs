@@ -18,13 +18,7 @@ private void Start() {
           xp.OnExperienceGained += UpdateLevel;
     }
 }
-
-
-    private void Update(){
-        if (gameObject.tag == CoreConstants.PLAYER_TAG){
-            print("My level: " + GetLevel());
-        }
-    }
+  
 
     public float GetStat(Stat stat) {
 
@@ -50,14 +44,15 @@ private void Start() {
         Experience xp = GetComponent<Experience>();
         if (xp == null) return 1;
         float currentExperience = xp.GetExperience();
+        int level = 0;
         float[] levels = progression.GetLevels(Stat.ExperienceToLevel, characterClass);
-        for (int index = currentLevel - 1; index < levels.Length; index++){
+        for (int index = 0; index < levels.Length; index++){
             if (currentExperience <= levels[index]) {
-                currentLevel = index + 1;
+                level = index + 1;
                 break;
             }
         }
-        return currentLevel;
+        return level;
     }
 
 }

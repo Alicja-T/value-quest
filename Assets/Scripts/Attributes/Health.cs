@@ -23,7 +23,6 @@ public class Health : MonoBehaviour, ISaveable{
 
     public void TakeDamage(GameObject instigator, float damage) {
        health = Mathf.Max(health-damage,0);
-       print("my health is " + health);
        if (health == 0) {
          AwardExperience(instigator);
          DeathSequence();
