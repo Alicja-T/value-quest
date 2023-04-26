@@ -8,7 +8,10 @@ public class SavingWrapper : MonoBehaviour
     [SerializeField] float fadeInTime = 0.2f;
     const string defaultSaveFile = "save";
 
-    IEnumerator Start() {
+    private void Awake() {
+        StartCoroutine(LoadLastScene());
+    }
+    private IEnumerator LoadLastScene() {
         Fader fader = FindObjectOfType<Fader>();
         fader.FadeOutImmediate();
        yield return GetComponent<SavingSystem>().LoadLastScene(defaultSaveFile);
@@ -22,6 +25,9 @@ public class SavingWrapper : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.S)) {
             Save();
         }
+        if (Input.GetKeyDown(KeyCode.Delete)) {
+            Delete();
+        }
     }
 
     public void Load() {
@@ -30,6 +36,10 @@ public class SavingWrapper : MonoBehaviour
 
     public void Save() {
         GetComponent<SavingSystem>().Save(defaultSaveFile);
+    }
+
+    public void Delete() {
+        GetComponent<SavingSystem>().Delete(defaultSaveFile);
     }
 
 }

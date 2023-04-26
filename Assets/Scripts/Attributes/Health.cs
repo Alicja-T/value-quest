@@ -7,13 +7,15 @@ using RPG.Stats;
 namespace RPG.Attributes {
 public class Health : MonoBehaviour, ISaveable{
    
-    [SerializeField] float health = 100f;
+    float health = -1f;
     bool isDead = false;
 
    
 
     void Start() {
+      if (health < 0) {
       health = GetComponent<BaseStats>().GetStat(Stat.Health);
+      }
     }
 
     // Update is called once per frame
