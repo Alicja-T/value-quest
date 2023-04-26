@@ -13,12 +13,13 @@ public class Health : MonoBehaviour, ISaveable{
    
 
     void Start() {
+      BaseStats stats = GetComponent<BaseStats>();
+      stats.OnLevelUp += RestoreHealth;
       if (health < 0) {
-      health = GetComponent<BaseStats>().GetStat(Stat.Health);
+        health = stats.GetStat(Stat.Health);
       }
     }
 
-    // Update is called once per frame
     public bool IsDead() {
       return isDead;
    }
@@ -40,6 +41,13 @@ public class Health : MonoBehaviour, ISaveable{
           GetComponent<Animator>().SetTrigger(CoreConstants.DEATH_TRIGGER);
           GetComponent<ActionScheduler>().CancelCurrentAction();
           isDead = true;
+      }
+    }
+
+    void RestoreHealth(){
+      float maxHealth = GetComponent<BaseStats>().GetStat(Stat.Health);
+      if (health < maxHealth) {
+        health = maxHealth;
       }
     }
 

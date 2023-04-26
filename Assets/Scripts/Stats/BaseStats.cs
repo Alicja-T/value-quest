@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using RPG.Core;
+using System;
 
 namespace RPG.Stats {
 public class BaseStats : MonoBehaviour
@@ -10,7 +11,9 @@ public class BaseStats : MonoBehaviour
     [SerializeField] int currentLevel = 1;
     [SerializeField] CharacterClass characterClass;
     [SerializeField] Progression progression = null;
+    [SerializeField] GameObject levelUpEffect = null;
     
+    public event Action OnLevelUp;
 private void Start() {
     currentLevel = CalculateLevel();
     Experience xp = GetComponent<Experience>();
@@ -36,8 +39,14 @@ private void Start() {
       int newLevel = CalculateLevel();
       if (newLevel > currentLevel){
         currentLevel = newLevel;
-        print("Levelled Up!");
+        LevelUpEffect();
+        OnLevelUp();
       }
+    }
+
+    private void LevelUpEffect()
+    {
+      Instantiate(levelUpEffect, transform);
     }
 
     public int CalculateLevel(){
