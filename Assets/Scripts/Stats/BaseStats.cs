@@ -25,7 +25,17 @@ private void Start() {
 
     public float GetStat(Stat stat) {
 
-        return progression.GetStat(stat, characterClass, currentLevel);
+        return progression.GetStat(stat, characterClass, currentLevel) + GetAdditiveModifier(stat);
+    }
+
+    private float GetAdditiveModifier(Stat stat){
+      float total = 0f;
+      foreach(IModifierProvider provider in GetComponents<IModifierProvider>()) {
+        foreach(float item in provider.GetAdditiveModifiers(stat)){
+            total += item;
+        }
+      }
+      return total;
     }
 
     public int GetLevel (){
