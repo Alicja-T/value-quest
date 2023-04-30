@@ -126,5 +126,11 @@ public void Cancel() {
         yield return currentWeapon.GetDamage();
       }
     }
+
+    IEnumerable<float> IModifierProvider.GetPercentageModifiers(Stat stat) {
+      if (stat == Stat.Damage) {
+        yield return currentWeapon.GetPercentageBonus();
+      }
+    }
   }//class Fighter
 }//namespace RPG.Combat

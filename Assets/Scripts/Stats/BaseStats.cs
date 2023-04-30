@@ -12,6 +12,7 @@ public class BaseStats : MonoBehaviour
     [SerializeField] CharacterClass characterClass;
     [SerializeField] Progression progression = null;
     [SerializeField] GameObject levelUpEffect = null;
+    [SerializeField] bool shouldUseModifier = false;
     
     public event Action OnLevelUp;
 private void Start() {
@@ -23,12 +24,32 @@ private void Start() {
 }
   
 
-    public float GetStat(Stat stat) {
+    public float GetStat(Stat stat)
+    {
 
-        return progression.GetStat(stat, characterClass, currentLevel) + GetAdditiveModifier(stat);
+      return (GetBaseStat(stat) + GetAdditiveModifier(stat)) 
+      * (1 + GetPercentageModifier(stat)/100);
+    }
+
+    private float GetPercentageModifier(Stat stat)
+    {
+      if (!shouldUseModifier) return 0f;
+      float total = 0f;
+      foreach(IModifierProvider provider in GetComponents<IModifierProvider>()) {
+        foreach(float item in provider.GetPercentageModifiers(stat)){
+            total += item;
+        }
+      }
+      return total;
+    }
+
+    private float GetBaseStat(Stat stat)
+    {
+      return progression.GetStat(stat, characterClass, currentLevel);
     }
 
     private float GetAdditiveModifier(Stat stat){
+      if (!shouldUseModifier) return 0f;
       float total = 0f;
       foreach(IModifierProvider provider in GetComponents<IModifierProvider>()) {
         foreach(float item in provider.GetAdditiveModifiers(stat)){
