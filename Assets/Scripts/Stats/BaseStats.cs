@@ -13,15 +13,27 @@ public class BaseStats : MonoBehaviour
     [SerializeField] Progression progression = null;
     [SerializeField] GameObject levelUpEffect = null;
     [SerializeField] bool shouldUseModifier = false;
-    
+    Experience xp;
     public event Action OnLevelUp;
-private void Start() {
-    currentLevel = CalculateLevel();
-    Experience xp = GetComponent<Experience>();
-    if (xp != null){
-          xp.OnExperienceGained += UpdateLevel;
+
+    private void Awake(){
+      xp = GetComponent<Experience>();
     }
-}
+
+    private void OnEnable(){
+      if (xp != null) {
+        xp.OnExperienceGained += UpdateLevel;
+      }
+    }
+
+    private void OnDisable() {
+      if (xp != null) {
+        xp.OnExperienceGained -= UpdateLevel;
+      }
+    }
+    private void Start() {
+      currentLevel = CalculateLevel();
+    }
   
 
     public float GetStat(Stat stat)

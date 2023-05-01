@@ -7,7 +7,7 @@ namespace RPG.Control {
   public class PlayerController : MonoBehaviour {
     // Start is called before the first frame update
     Health health;
-    void Start() {
+    private void Awake() {
       health = GetComponent<Health>();
     }
 

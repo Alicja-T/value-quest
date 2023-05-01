@@ -23,11 +23,15 @@ namespace RPG.Control {
     int currentPathInd = 0;
     float timeSinceLastSawPlayer = Mathf.Infinity;
     float timeAtWaypoint = Mathf.Infinity;
-    private void Start() {
+
+    private void Awake(){
         fighter = GetComponent<Fighter>();
         player = GameObject.FindGameObjectWithTag(CoreConstants.PLAYER_TAG);
         health = GetComponent<Health>();
         mover = GetComponent<Mover>();
+    }
+
+    private void Start() {
         guardLocation = transform.position;
     }
 

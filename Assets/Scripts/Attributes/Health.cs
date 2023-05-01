@@ -9,13 +9,21 @@ public class Health : MonoBehaviour, ISaveable{
    
     float health = -1f;
     bool isDead = false;
-
+    BaseStats stats;
    
+    void Awake() {
+      stats = GetComponent<BaseStats>();
+    }
 
-    void Start() {
-      BaseStats stats = GetComponent<BaseStats>();
+    private void OnEnable() {
       stats.OnLevelUp += RestoreHealth;
-      if (health < 0) {
+    }
+
+    private void OnDisable() {
+      stats.OnLevelUp -= RestoreHealth;
+    }
+    void Start() {
+    if (health < 0) {
         health = stats.GetStat(Stat.Health);
       }
     }

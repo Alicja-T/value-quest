@@ -11,7 +11,7 @@ namespace RPG.Movement {
     [SerializeField] float maxSpeed = 6f;
     Health health;
     NavMeshAgent navMeshAgent;
-    void Start() {
+    void Awake() {
       navMeshAgent = GetComponent<NavMeshAgent>();
       health = GetComponent<Health>();
     }
@@ -58,10 +58,10 @@ namespace RPG.Movement {
     public void RestoreState(object state) {
       MoverState data = (MoverState)state;
       //TO_DO check if position is from the same scene to get rid of warning
-      GetComponent<NavMeshAgent>().enabled = false;
+      navMeshAgent.enabled = false;
       transform.position = data.position.ToVector();
-      transform.eulerAngles = data.rotation.ToVector();
-      GetComponent<NavMeshAgent>().enabled = true;
+      //transform.eulerAngles = data.rotation.ToVector();
+      navMeshAgent.enabled = true;
     }
   }
 
