@@ -75,7 +75,7 @@ public class Health : MonoBehaviour, ISaveable{
     }
 
     public object CaptureState() {
-      return healthPoints;
+      return healthPoints.value;
     }
 
     public void RestoreState(object state) {
