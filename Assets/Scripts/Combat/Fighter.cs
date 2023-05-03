@@ -5,6 +5,7 @@ using RPG.Saving;
 using RPG.Attributes;
 using RPG.Stats;
 using System.Collections.Generic;
+using GameDevTV.Utils;
 
 namespace RPG.Combat{
 public class Fighter : MonoBehaviour, IAction, ISaveable, IModifierProvider {
@@ -16,13 +17,20 @@ public class Fighter : MonoBehaviour, IAction, ISaveable, IModifierProvider {
 [SerializeField] string defaultWeaponName = CoreConstants.DEFAULT_WEAPON_NAME;
 Health target;
 float timeSinceLastAttack = Mathf.Infinity;
-Weapon currentWeapon = null;
+LazyValue<Weapon> currentWeapon;
 
 private void Awake() {
-   if (currentWeapon == null) {
-    EquipWeapon(defaultWeapon);
-   }
+   currentWeapon = new LazyValue<Weapon>(SetDefaultWeapon);
 } 
+
+private void Start(){
+    currentWeapon.ForceInit();
+}
+
+private Weapon SetDefaultWeapon() {
+    AttachWeapon(defaultWeapon);
+    return defaultWeapon;
+}
 
 private void Update() {
     timeSinceLastAttack += Time.deltaTime;
@@ -38,18 +46,25 @@ private void Update() {
     }
 }
 
-public void EquipWeapon(Weapon weapon) {
-    if (weapon == null) return;
-    currentWeapon = weapon;
-    Animator animator = GetComponent<Animator>();
-    if (animator != null) {
+public void EquipWeapon(Weapon weapon)
+    {
+      if (weapon == null) return;
+      currentWeapon.value = weapon;
+      AttachWeapon(weapon);
+    }
+
+    private void AttachWeapon(Weapon weapon)
+    {
+      Animator animator = GetComponent<Animator>();
+      if (animator != null)
+      {
         //AnimatorOverrideController animatorOverrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
         //animator.runtimeAnimatorController = animatorOverrideController;
-        currentWeapon.Spawn(rightHandTransform, leftHandTransform, animator);
+        weapon.Spawn(rightHandTransform, leftHandTransform, animator);
+      }
     }
-}
 
-public Health GetTarget() {
+    public Health GetTarget() {
     return target;
 }
 
@@ -57,8 +72,8 @@ public Health GetTarget() {
 void Hit() {
     if (target == null) {return;}
     float damage = GetComponent<BaseStats>().GetStat(Stat.Damage);
-    if (currentWeapon.HasProjectile()) {
-        currentWeapon.LaunchProjectile(leftHandTransform, rightHandTransform, target, gameObject, damage);
+    if (currentWeapon.value.HasProjectile()) {
+        currentWeapon.value.LaunchProjectile(leftHandTransform, rightHandTransform, target, gameObject, damage);
     }
     else {
         target.TakeDamage(gameObject, damage);
@@ -80,7 +95,7 @@ void AttackBehaviour() {
 
 
 private bool GetIsInRange() {
-    return Vector3.Distance(transform.position, target.transform.position) < currentWeapon.GetRange();
+    return Vector3.Distance(transform.position, target.transform.position) < currentWeapon.value.GetRange();
 }
 
 private void TriggerAttack() {
@@ -112,7 +127,7 @@ public void Cancel() {
 }
 
     public object CaptureState() {
-      return currentWeapon.name;
+      return currentWeapon.value.name;
     }
 
     public void RestoreState(object state) {
@@ -123,13 +138,13 @@ public void Cancel() {
 
     public IEnumerable<float> GetAdditiveModifiers(Stat stat) {
       if (stat == Stat.Damage) {
-        yield return currentWeapon.GetDamage();
+        yield return currentWeapon.value.GetDamage();
       }
     }
 
     IEnumerable<float> IModifierProvider.GetPercentageModifiers(Stat stat) {
       if (stat == Stat.Damage) {
-        yield return currentWeapon.GetPercentageBonus();
+        yield return currentWeapon.value.GetPercentageBonus();
       }
     }
   }//class Fighter

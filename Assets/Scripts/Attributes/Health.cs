@@ -2,17 +2,22 @@
 using RPG.Saving;
 using RPG.Core;
 using RPG.Stats;
-
+using GameDevTV.Utils;
 
 namespace RPG.Attributes {
 public class Health : MonoBehaviour, ISaveable{
    
-    float health = -1f;
+    LazyValue<float> healthPoints;
     bool isDead = false;
     BaseStats stats;
    
     void Awake() {
       stats = GetComponent<BaseStats>();
+      healthPoints = new LazyValue<float>(GetInitialHealth);
+    }
+
+    private float GetInitialHealth(){
+      return GetComponent<BaseStats>().GetStat(Stat.Health);
     }
 
     private void OnEnable() {
@@ -23,9 +28,7 @@ public class Health : MonoBehaviour, ISaveable{
       stats.OnLevelUp -= RestoreHealth;
     }
     void Start() {
-    if (health < 0) {
-        health = stats.GetStat(Stat.Health);
-      }
+      healthPoints.ForceInit();
     }
 
     public bool IsDead() {
@@ -34,15 +37,15 @@ public class Health : MonoBehaviour, ISaveable{
 
     public void TakeDamage(GameObject instigator, float damage) {
       print(gameObject.name + " took damage " + damage);
-      health = Mathf.Max(health-damage,0);
-      if (health == 0) {
+      healthPoints.value = Mathf.Max(healthPoints.value-damage,0);
+      if (healthPoints.value == 0) {
         AwardExperience(instigator);
         DeathSequence();
       }
     }
 
     public float GetHealthPoints() {
-      return health;
+      return healthPoints.value;
     }
 
     public float GetMaxHealthPoints() {
@@ -50,7 +53,7 @@ public class Health : MonoBehaviour, ISaveable{
     }
 
     public float GetPercentage() {
-      return 100f * (health / GetComponent<BaseStats>().GetStat(Stat.Health));
+      return 100f * (healthPoints.value / GetComponent<BaseStats>().GetStat(Stat.Health));
     }
 
     void DeathSequence() {
@@ -62,7 +65,7 @@ public class Health : MonoBehaviour, ISaveable{
     }
 
     void RestoreHealth(){
-      health = GetComponent<BaseStats>().GetStat(Stat.Health);
+      healthPoints.value = GetComponent<BaseStats>().GetStat(Stat.Health);
     }
 
     private void AwardExperience(GameObject instigator){
@@ -72,12 +75,12 @@ public class Health : MonoBehaviour, ISaveable{
     }
 
     public object CaptureState() {
-      return health;
+      return healthPoints;
     }
 
     public void RestoreState(object state) {
-      health = (float)state;
-      if (health == 0) {
+      healthPoints.value = (float)state;
+      if (healthPoints.value == 0) {
          DeathSequence();
       }
     }
