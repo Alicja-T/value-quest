@@ -2,7 +2,7 @@
 using RPG.Movement;
 using RPG.Combat;
 using RPG.Attributes;
-using System;
+using UnityEngine.EventSystems;
 
 namespace RPG.Control {
   public class PlayerController : MonoBehaviour {
@@ -12,7 +12,8 @@ namespace RPG.Control {
     enum CursorType {
       None, 
       Movement, 
-      Combat
+      Combat, 
+      UI
     }
     [System.Serializable]
     struct CursorMapping {
@@ -28,7 +29,11 @@ namespace RPG.Control {
 
     // Update is called once per frame
     void Update() {
+      if (InteractWithUI()) {
+        return;
+      }
       if (health.IsDead()) {
+        SetCursor(CursorType.None);
         return;
       }
       if (InteractWithCombat()) {
@@ -38,6 +43,15 @@ namespace RPG.Control {
         return;
       }
       SetCursor(CursorType.None);
+    }
+
+    private bool InteractWithUI()
+    {
+      bool debug = EventSystem.current.IsPointerOverGameObject();
+      if (debug) {
+        SetCursor(CursorType.UI);
+      }
+      return debug;
     }
 
     private bool InteractWithCombat() {
