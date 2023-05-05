@@ -10,12 +10,6 @@ namespace RPG.Control {
     // Start is called before the first frame update
     Health health;
 
-    enum CursorType {
-      None, 
-      Movement, 
-      Combat, 
-      UI
-    }
     [System.Serializable]
     struct CursorMapping {
       public CursorType type;
@@ -54,7 +48,7 @@ namespace RPG.Control {
         IRaycastable[] raycastables = hit.transform.GetComponents<IRaycastable>();
         foreach (IRaycastable raycastable in raycastables) {
           if (raycastable.handleRaycast(this)) {
-            SetCursor(CursorType.Combat);
+            SetCursor(raycastable.GetCursorType());
             return true;
           } 
         }
