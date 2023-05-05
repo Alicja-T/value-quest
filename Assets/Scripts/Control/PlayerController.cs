@@ -3,6 +3,7 @@ using RPG.Movement;
 using RPG.Combat;
 using RPG.Attributes;
 using UnityEngine.EventSystems;
+using System;
 
 namespace RPG.Control {
   public class PlayerController : MonoBehaviour {
@@ -36,13 +37,29 @@ namespace RPG.Control {
         SetCursor(CursorType.None);
         return;
       }
-      if (InteractWithCombat()) {
+      if (InteractWithComponent()){
         return;
-      };
+      }
+
       if (InteractWithMovement()) {
         return;
       }
       SetCursor(CursorType.None);
+    }
+
+    private bool InteractWithComponent()
+    {
+      RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
+      foreach (RaycastHit hit in hits) {
+        IRaycastable[] raycastables = hit.transform.GetComponents<IRaycastable>();
+        foreach (IRaycastable raycastable in raycastables) {
+          if (raycastable.handleRaycast(this)) {
+            SetCursor(CursorType.Combat);
+            return true;
+          } 
+        }
+      }
+      return false;
     }
 
     private bool InteractWithUI()
@@ -52,24 +69,6 @@ namespace RPG.Control {
         SetCursor(CursorType.UI);
       }
       return debug;
-    }
-
-    private bool InteractWithCombat() {
-      RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
-      foreach (RaycastHit hit in hits) {
-        CombatTarget target = hit.transform.gameObject.GetComponent<CombatTarget>();
-        if (target == null) continue;
-        bool canAttack = GetComponent<Fighter>().CanAttack(target.gameObject);
-        if (!canAttack) {
-          continue;
-        }
-        if (Input.GetMouseButton(0)) {
-          GetComponent<Fighter>().Attack(target.gameObject);
-        }
-        SetCursor(CursorType.Combat);
-        return true;
-      }
-      return false;
     }
 
     private void SetCursor(CursorType type)
