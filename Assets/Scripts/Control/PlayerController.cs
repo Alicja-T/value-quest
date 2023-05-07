@@ -41,19 +41,28 @@ namespace RPG.Control {
       SetCursor(CursorType.None);
     }
 
-    private bool InteractWithComponent()
-    {
-      RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
+    private bool InteractWithComponent() {
+      RaycastHit[] hits = GetSortedHits();
       foreach (RaycastHit hit in hits) {
         IRaycastable[] raycastables = hit.transform.GetComponents<IRaycastable>();
         foreach (IRaycastable raycastable in raycastables) {
           if (raycastable.handleRaycast(this)) {
             SetCursor(raycastable.GetCursorType());
             return true;
-          } 
+          }
         }
       }
       return false;
+    }
+
+    private static RaycastHit[] GetSortedHits() {
+      RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
+      float[] distances = new float[hits.Length];
+      for (int i = 0; i < hits.Length; i++) {
+        distances[i] = hits[i].distance;
+      }
+      Array.Sort(distances, hits);
+      return hits;
     }
 
     private bool InteractWithUI()
