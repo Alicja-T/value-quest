@@ -4,12 +4,14 @@ using RPG.Combat;
 using RPG.Attributes;
 using UnityEngine.EventSystems;
 using System;
+using UnityEngine.AI;
 
 namespace RPG.Control {
   public class PlayerController : MonoBehaviour {
     // Start is called before the first frame update
     Health health;
-
+    [SerializeField]
+    float maxDistance = 0.5f;
     [System.Serializable]
     struct CursorMapping {
       public CursorType type;
@@ -90,11 +92,12 @@ namespace RPG.Control {
     }
     private bool InteractWithMovement() {
 
-      RaycastHit hit;
-      bool hasHit = Physics.Raycast(GetMouseRay(), out hit);
+     
+      Vector3 target = new Vector3();
+      bool hasHit = RaycastNavMesh(out target);
       if (hasHit) {
         if (Input.GetMouseButton(0)) {
-          GetComponent<Mover>().StartMoveAction(hit.point, 1f);
+          GetComponent<Mover>().StartMoveAction(target, 1f);
         }
         SetCursor(CursorType.Movement);
         return true;     
@@ -102,6 +105,18 @@ namespace RPG.Control {
       return false;
     }
 
+    private bool RaycastNavMesh(out Vector3 target){ 
+      RaycastHit hit;
+      target = new Vector3();
+      bool hasHit = Physics.Raycast(GetMouseRay(), out hit);
+      NavMeshHit navMeshHit;
+      if (!hasHit) return false;
+      if (NavMesh.SamplePosition(hit.point, out navMeshHit, maxDistance, NavMesh.AllAreas)) {
+        target = navMeshHit.position;
+        return true;
+      }
+      return false;
+    }
     private static Ray GetMouseRay() {
       return Camera.main.ScreenPointToRay(Input.mousePosition);
     }
