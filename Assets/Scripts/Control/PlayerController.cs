@@ -12,6 +12,8 @@ namespace RPG.Control {
     Health health;
     [SerializeField]
     float maxDistance = 0.5f;
+    [SerializeField]
+    float maxPathLength = 40f;
     [System.Serializable]
     struct CursorMapping {
       public CursorType type;
@@ -111,12 +113,29 @@ namespace RPG.Control {
       bool hasHit = Physics.Raycast(GetMouseRay(), out hit);
       NavMeshHit navMeshHit;
       if (!hasHit) return false;
-      if (NavMesh.SamplePosition(hit.point, out navMeshHit, maxDistance, NavMesh.AllAreas)) {
-        target = navMeshHit.position;
-        return true;
-      }
-      return false;
+      bool hasCastToMesh = NavMesh.SamplePosition(hit.point, out navMeshHit, 
+        maxDistance, NavMesh.AllAreas);
+      if (!hasCastToMesh) return false;
+      NavMeshPath path = new NavMeshPath();
+      target = navMeshHit.position;
+      bool hasPath = NavMesh.CalculatePath(transform.position, target, NavMesh.AllAreas, path);
+      if (!hasPath) return false;
+      if (path.status != NavMeshPathStatus.PathComplete) return false;
+      if (GetPathLength(path) > maxPathLength) return false;
+      return true;
+      
+      
     }
+
+    private float GetPathLength(NavMeshPath path) {
+      Vector3[] corners = path.corners;
+      float distance = 0;
+      for (int i = 1; i < corners.Length; i++) {
+        distance += Vector3.Distance(corners[i-1], corners[i]);
+      }
+      return distance;
+    }
+
     private static Ray GetMouseRay() {
       return Camera.main.ScreenPointToRay(Input.mousePosition);
     }
