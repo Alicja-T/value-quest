@@ -3,14 +3,21 @@ using RPG.Saving;
 using RPG.Core;
 using RPG.Stats;
 using GameDevTV.Utils;
+using UnityEngine.Events;
 
 namespace RPG.Attributes {
 public class Health : MonoBehaviour, ISaveable{
    
+    [SerializeField] TakeDamageEvent takeDamage;
     LazyValue<float> healthPoints;
     bool isDead = false;
     BaseStats stats;
-   
+    [System.Serializable]
+    public class TakeDamageEvent : UnityEvent<float> {
+
+    } 
+
+
     void Awake() {
       stats = GetComponent<BaseStats>();
       healthPoints = new LazyValue<float>(GetInitialHealth);
@@ -41,6 +48,9 @@ public class Health : MonoBehaviour, ISaveable{
       if (healthPoints.value == 0) {
         AwardExperience(instigator);
         DeathSequence();
+      }
+      else {
+        takeDamage.Invoke(damage);
       }
     }
 
