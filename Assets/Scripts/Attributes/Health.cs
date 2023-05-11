@@ -45,13 +45,12 @@ public class Health : MonoBehaviour, ISaveable{
     public void TakeDamage(GameObject instigator, float damage) {
       print(gameObject.name + " took damage " + damage);
       healthPoints.value = Mathf.Max(healthPoints.value-damage,0);
+      takeDamage.Invoke(damage);
       if (healthPoints.value == 0) {
         AwardExperience(instigator);
         DeathSequence();
       }
-      else {
-        takeDamage.Invoke(damage);
-      }
+      
     }
 
     public float GetHealthPoints() {
@@ -60,6 +59,10 @@ public class Health : MonoBehaviour, ISaveable{
 
     public float GetMaxHealthPoints() {
       return GetComponent<BaseStats>().GetStat(Stat.Health);
+    }
+
+    public float GetFraction() {
+      return GetHealthPoints()/GetMaxHealthPoints();
     }
 
     public float GetPercentage() {
