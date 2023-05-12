@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 using RPG.Core;
+using RPG.Control;
 namespace RPG.SceneManagement {
 public class Portal : MonoBehaviour {
 
@@ -27,21 +28,32 @@ public class Portal : MonoBehaviour {
          DontDestroyOnLoad(gameObject);
 
         Fader fader = FindObjectOfType<Fader>();
-        yield return fader.FadeOut(fadeOutTime);
+   
         SavingWrapper savingWrapper = FindObjectOfType<SavingWrapper>();
-        print("started saving first scene");
+        PlayerController playerController = GameObject
+                                            .FindWithTag(CoreConstants.PLAYER_TAG)
+                                            .GetComponent<PlayerController>();
+        playerController.enabled = false;
+        yield return fader.FadeOut(fadeOutTime);
         savingWrapper.Save();
         yield return SceneManager.LoadSceneAsync(sceneIndex);
-        print("loading new scene");
+        
+        PlayerController newPlayerController = GameObject
+                                            .FindWithTag(CoreConstants.PLAYER_TAG)
+                                            .GetComponent<PlayerController>();
+        newPlayerController.enabled = false;
+
         savingWrapper.Load();
         yield return new WaitForEndOfFrame();
-        print("Scene loaded");
+
         Portal otherPortal = GetOtherPortal();
         UpdatePlayer(otherPortal);
         savingWrapper.Save();
-        print("saving new location");
+
         yield return new WaitForSeconds(waitTime);
         yield return fader.FadeIn(fadeInTime);
+
+        newPlayerController.enabled = true;
         Destroy(gameObject);
     }
     private void UpdatePlayer(Portal otherPortal) {
