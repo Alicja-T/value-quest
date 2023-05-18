@@ -14,7 +14,10 @@
 /[Aa]ssets/Scenes/**
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 /[Aa]ssets/**/*.meta
-
+*.mp3
+*.wav
+*.aif
+*.png
 # Uncomment this line if you wish to ignore the asset store tools plugin
 # /[Aa]ssets/AssetStoreTools*
 
@@ -77,3 +80,4 @@ Assets/AllSkyFree/*
 Assets/Conifers*/*
 Assets/Rocks*/*
 Assets/Sun.mat
+Assets/Free Pack/Ice Cavern-Loop.wav
