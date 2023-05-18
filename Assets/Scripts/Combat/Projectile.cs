@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 using RPG.Attributes;
 
 namespace RPG.Combat{
@@ -18,6 +19,7 @@ public class Projectile : MonoBehaviour
     
     Vector3 shootingDirection; 
 
+    [SerializeField] UnityEvent OnHit;
 
     void Start() {
         transform.LookAt(GetAimLocation());
@@ -54,6 +56,7 @@ public class Projectile : MonoBehaviour
         if (target.IsDead()) return;
         target.TakeDamage(instigator, damage);
         speed = 0;
+        OnHit.Invoke();
         if (hitEffect != null) {
             Instantiate(hitEffect, GetAimLocation(), transform.rotation);
         }

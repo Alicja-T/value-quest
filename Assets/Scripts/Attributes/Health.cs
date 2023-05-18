@@ -16,7 +16,7 @@ public class Health : MonoBehaviour, ISaveable{
     public class TakeDamageEvent : UnityEvent<float> {
 
     } 
-
+    [SerializeField] UnityEvent OnDie;
 
     void Awake() {
       stats = GetComponent<BaseStats>();
@@ -47,6 +47,7 @@ public class Health : MonoBehaviour, ISaveable{
       healthPoints.value = Mathf.Max(healthPoints.value-damage,0);
       takeDamage.Invoke(damage);
       if (healthPoints.value == 0) {
+        OnDie.Invoke();
         AwardExperience(instigator);
         DeathSequence();
       }
