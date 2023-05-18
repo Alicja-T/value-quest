@@ -13,21 +13,21 @@ public class Fighter : MonoBehaviour, IAction, ISaveable, IModifierProvider {
 [SerializeField] float timeBetweenAttacks = 1f;
 [SerializeField] Transform rightHandTransform;
 [SerializeField] Transform leftHandTransform;
-[SerializeField] Weapon defaultWeapon = null;
+[SerializeField] WeaponConfig defaultWeapon = null;
 [SerializeField] string defaultWeaponName = CoreConstants.DEFAULT_WEAPON_NAME;
 Health target;
 float timeSinceLastAttack = Mathf.Infinity;
-LazyValue<Weapon> currentWeapon;
+LazyValue<WeaponConfig> currentWeapon;
 
 private void Awake() {
-   currentWeapon = new LazyValue<Weapon>(SetDefaultWeapon);
+   currentWeapon = new LazyValue<WeaponConfig>(SetDefaultWeapon);
 } 
 
 private void Start(){
     currentWeapon.ForceInit();
 }
 
-private Weapon SetDefaultWeapon() {
+private WeaponConfig SetDefaultWeapon() {
     AttachWeapon(defaultWeapon);
     return defaultWeapon;
 }
@@ -46,14 +46,14 @@ private void Update() {
     }
 }
 
-public void EquipWeapon(Weapon weapon)
+public void EquipWeapon(WeaponConfig weapon)
     {
       if (weapon == null) return;
       currentWeapon.value = weapon;
       AttachWeapon(weapon);
     }
 
-    private void AttachWeapon(Weapon weapon)
+    private void AttachWeapon(WeaponConfig weapon)
     {
       Animator animator = GetComponent<Animator>();
       if (animator != null)
@@ -132,7 +132,7 @@ public void Cancel() {
 
     public void RestoreState(object state) {
       string weaponName = (string)state;
-      Weapon weapon = Resources.Load<Weapon>(weaponName);
+      WeaponConfig weapon = Resources.Load<WeaponConfig>(weaponName);
       EquipWeapon(weapon);
     }
 

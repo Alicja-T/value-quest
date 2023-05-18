@@ -7,7 +7,7 @@ namespace RPG.Combat {
 public class WeaponPickup : MonoBehaviour, IRaycastable
 { 
 
-    [SerializeField] Weapon weapon = null;
+    [SerializeField] WeaponConfig weapon = null;
     [SerializeField] float respawnTime = 5f;
     /// <summary>
     /// OnTriggerEnter is called when the Collider other enters the trigger.
