@@ -12,11 +12,12 @@ public class WeaponConfig : ScriptableObject
     [SerializeField] bool isRightHand = true;
     [SerializeField] Projectile projectile = null;
 
-    public void Spawn(Transform rightHand, Transform leftHand, Animator animator){
+    public Weapon Spawn(Transform rightHand, Transform leftHand, Animator animator){
         DestroyOldWeapon(rightHand, leftHand);
+        Weapon weapon = null;
         if (equippedPrefab != null){
             Transform handTransform = GetHandTransform(rightHand, leftHand);
-            Weapon weapon = Instantiate(equippedPrefab, handTransform);
+            weapon = Instantiate(equippedPrefab, handTransform);
             weapon.name = CoreConstants.WEAPON;
         }
         var overrideController = animator.runtimeAnimatorController as AnimatorOverrideController;
@@ -27,6 +28,7 @@ public class WeaponConfig : ScriptableObject
            animator.runtimeAnimatorController = overrideController.runtimeAnimatorController;
 
         }
+        return weapon;
     }
 
 
