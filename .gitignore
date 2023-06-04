@@ -81,3 +81,6 @@ Assets/Conifers*/*
 Assets/Rocks*/*
 Assets/Sun.mat
 Assets/Free Pack/Ice Cavern-Loop.wav
+*.mat
+*.fbx
+*.tga
