@@ -84,3 +84,12 @@ Assets/Free Pack/Ice Cavern-Loop.wav
 *.mat
 *.fbx
 *.tga
+*.bmp
+*.psd
+*.jpg
+*.tif
+Assets/GreenForest/*
+Assets/Grass And Flowers Pack 1/*
+Assets/Almgp_unity5_ice/*
+Assets/3DForge/*
+Assets/ForestVision_Uni/*
