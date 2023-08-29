@@ -6,6 +6,7 @@ using RPG.Attributes;
 using RPG.Stats;
 using System.Collections.Generic;
 using GameDevTV.Utils;
+using GameDevTV.Inventories;
 
 namespace RPG.Combat{
 public class Fighter : MonoBehaviour, IAction, ISaveable, IModifierProvider {
@@ -19,10 +20,14 @@ Health target;
 float timeSinceLastAttack = Mathf.Infinity;
 WeaponConfig currentWeaponConfig;
 LazyValue<Weapon> currentWeapon;
-
+Equipment equipment;
 private void Awake() {
    currentWeaponConfig = defaultWeapon;
    currentWeapon = new LazyValue<Weapon>(SetDefaultWeapon);
+   equipment = GetComponent<Equipment>();
+   if (equipment) {
+    equipment.equipmentUpdated += UpdateWeapon;
+   }
 } 
 
 private void Start(){
@@ -47,6 +52,15 @@ private void Update() {
     }
 }
 
+private void UpdateWeapon() {
+  var weapon = equipment.GetItemInSlot(EquipLocation.Weapon) as WeaponConfig;
+  if (weapon != null) {
+    EquipWeapon(weapon);
+  }
+  else {
+    EquipWeapon(defaultWeapon);
+  }
+}
 public void EquipWeapon(WeaponConfig weapon)
     {
       if (weapon == null) return;

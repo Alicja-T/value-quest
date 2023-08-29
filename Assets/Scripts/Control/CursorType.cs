@@ -4,6 +4,7 @@ public enum CursorType {
   Movement, 
   Combat,
   Pickup, 
-  UI
+  UI,
+  FullPickup,
 }
 }// namespace
