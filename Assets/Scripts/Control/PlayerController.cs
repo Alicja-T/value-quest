@@ -5,6 +5,7 @@ using RPG.Attributes;
 using UnityEngine.EventSystems;
 using System;
 using UnityEngine.AI;
+using UnityEngine.Experimental.UIElements;
 
 namespace RPG.Control {
   public class PlayerController : MonoBehaviour {
@@ -22,6 +23,8 @@ namespace RPG.Control {
     }
 
     [SerializeField] CursorMapping[] cursorMappings = null;
+    
+    bool isDraggingUI = false;
     private void Awake() {
       health = GetComponent<Health>();
     }
@@ -70,10 +73,19 @@ namespace RPG.Control {
     }
 
     private bool InteractWithUI()
-    {
+    { 
+      if (Input.GetMouseButtonUp(0)) {
+        isDraggingUI = false;
+      }
       bool debug = EventSystem.current.IsPointerOverGameObject();
       if (debug) {
+        if (Input.GetMouseButtonDown(0)) {
+          isDraggingUI = true;
+        }
         SetCursor(CursorType.UI);
+      }
+      if (isDraggingUI) {
+        return true;
       }
       return debug;
     }
