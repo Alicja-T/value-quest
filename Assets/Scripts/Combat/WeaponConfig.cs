@@ -79,12 +79,14 @@ public class WeaponConfig : EquipableItem, IModifierProvider
     }
 
     public IEnumerable<float> GetAdditiveModifiers(Stat stat) {
+        //TODO change to StatEquipableItem to implement more stats
         if (stat == Stat.Damage) {
             yield return weaponDamage;
         }
     }
 
     public IEnumerable<float> GetPercentageModifiers(Stat stat) {
+        //TODO change to StatEquipableItem to implement more stats
         if (stat == Stat.Damage) {
             yield return percentageBonus;
         }
