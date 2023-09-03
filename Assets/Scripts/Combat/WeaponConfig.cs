@@ -2,10 +2,12 @@
 using RPG.Core;
 using RPG.Attributes;
 using GameDevTV.Inventories;
+using RPG.Stats;
+using System.Collections.Generic;
 
 namespace RPG.Combat {
 [CreateAssetMenu(fileName = "Weapon", menuName = "Weapons/Make New Weapon", order = 0)]
-public class WeaponConfig : EquipableItem
+public class WeaponConfig : EquipableItem, IModifierProvider
 {  [SerializeField] AnimatorOverrideController weaponOverride = null;
     [SerializeField] Weapon equippedPrefab = null;
     [SerializeField] float weaponRange = 2f;
@@ -76,5 +78,16 @@ public class WeaponConfig : EquipableItem
         return percentageBonus;
     }
 
-}  
+    public IEnumerable<float> GetAdditiveModifiers(Stat stat) {
+        if (stat == Stat.Damage) {
+            yield return weaponDamage;
+        }
+    }
+
+    public IEnumerable<float> GetPercentageModifiers(Stat stat) {
+        if (stat == Stat.Damage) {
+            yield return percentageBonus;
+        }
+    }
+    }  
 }//namespace
